@@ -23,9 +23,19 @@ class Board():
 
             for i in range(bomb_count):
                 bomb_index = filler.pop(random.randrange(0,total-i))
-                cell = self.board[bomb_index%row_count][bomb_index//col_count]
+                cell = self.board[bomb_index//col_count][bomb_index%col_count]
                 cell.bomb = 1
     
+    def print(self):
+        #print the current case of the board to the terminal
+        sprite_board = ""
+        for row in self.board:
+            for cell in row:
+                if cell.bomb: sprite_board += "X"
+                else: sprite_board += "#"
+            sprite_board += "\n"
+        
+        print(sprite_board)
     pass
 
 class Cell():
