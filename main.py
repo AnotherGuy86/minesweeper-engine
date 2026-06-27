@@ -23,26 +23,43 @@ class Board():
 
             for i in range(bomb_count):
                 bomb_index = filler.pop(random.randrange(0,total-i))
-                cell = self.board[bomb_index//col_count][bomb_index%col_count]
+                row_index = bomb_index//col_count
+                col_index = bomb_index%col_count
+
+                cell = self.board[row_index][col_index]
                 cell.bomb = 1
+                #Update adj bomb count for cells (this includes self)
+                for i in [-1,0,1]:
+                    for j in [-1,0,1]:
+                        try: self.board[row_index+i][col_index+j].value += 1
+                        except IndexError: pass
+
+
+    def flag(self,row,col):
+        cell= self.board[row][col]
+        cell.flagged = not cell.flagged
     
+
     def print(self):
         #print the current case of the board to the terminal
         sprite_board = ""
         for row in self.board:
             for cell in row:
                 if cell.bomb: sprite_board += "X"
-                else: sprite_board += "#"
+                elif cell.value == 0: sprite_board += "_"
+                else: sprite_board += str(cell.value)
+
             sprite_board += "\n"
         
         print(sprite_board)
     pass
 
 class Cell():
-    def __init__(self,row,col,bomb=0,flagged=0):
+    def __init__(self,row,col,bomb=0,flagged=0,value = 0):
             self.row = row
             self.col = col
             self.bomb = bomb
             self.flagged = flagged
+            self.value = value #this is inclusive if its a bomb
     pass
 
