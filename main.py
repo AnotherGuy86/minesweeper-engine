@@ -6,11 +6,11 @@ import random
 
 class Board():
     def __init__(self,row_count:int,col_count:int,bomb_count:int):
-            self.row_count = row_count #this is discrete height
-            self.col_count = col_count #this is discrete width
+            self.row_count = row_count #this is discrete height ie the col-length
+            self.col_count = col_count #this is discrete width  ie the row-length
             self.bomb_count = bomb_count
             
-            self.board = [[ 0 for i in range(col_count)] for i in range(row_count)]
+            self.board = [[ Cell(i,j) for i in range(col_count)] for j in range(row_count)]
             
             #Now randomly distribute the bombs
             #We need to randomly disribute bombs across a list of spaces
@@ -22,12 +22,17 @@ class Board():
             filler = list(range(total))
 
             for i in range(bomb_count):
-                
                 bomb_index = filler.pop(random.randrange(0,total-i))
-                self.board[bomb_index%row_count][bomb_index//col_count] = 1
-
-            pass
+                cell = self.board[bomb_index%row_count][bomb_index//col_count]
+                cell.bomb = 1
+    
     pass
 
 class Cell():
+    def __init__(self,row,col,bomb=0,flagged=0):
+            self.row = row
+            self.col = col
+            self.bomb = bomb
+            self.flagged = flagged
     pass
+
