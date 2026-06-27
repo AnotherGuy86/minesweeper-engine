@@ -9,7 +9,8 @@ class Board():
             self.row_count = row_count #this is discrete height ie the col-length
             self.col_count = col_count #this is discrete width  ie the row-length
             self.bomb_count = bomb_count
-            
+            self.fail = False
+
             self.board = [[ Cell(i,j) for i in range(col_count)] for j in range(row_count)]
             
             #Now randomly distribute the bombs
@@ -35,11 +36,17 @@ class Board():
                         except IndexError: pass
 
 
-    def flag(self,row_position,col_position):
+    def flag(self,row_pos,col_pos):
         #uses regular coordinate systems
-        cell= self.board[col_position][row_position]
+        cell= self.board[col_pos][row_pos]
         cell.flagged = not cell.flagged
     
+    def check(self,row_pos,col_pos):
+        cell = self.board[col_pos][row_pos]
+        if cell.bomb : self.fail = True
+        else:
+            cell.visible = 1
+
     def print(self,make_visible=False,invert=True):
         #print the current case of the board to the terminal
         sprite_board = ""
