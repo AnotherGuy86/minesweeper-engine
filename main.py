@@ -26,7 +26,7 @@ class Board():
                 row_index = bomb_index//col_count
                 col_index = bomb_index%col_count
 
-                cell = self.board[row_index][col_index]
+                cell = self.board[row_index][col_index] #which row which col
                 cell.bomb = 1
                 #Update adj bomb count for cells (this includes self)
                 for i in [-1,0,1]:
@@ -35,11 +35,12 @@ class Board():
                         except IndexError: pass
 
 
-    def flag(self,row,col):
-        cell= self.board[row][col]
+    def flag(self,row_position,col_position):
+        #uses regular coordinate systems
+        cell= self.board[col_position][row_position]
         cell.flagged = not cell.flagged
     
-    def print(self,make_visible=False):
+    def print(self,make_visible=False,invert=True):
         #print the current case of the board to the terminal
         sprite_board = ""
         for row in self.board:
@@ -54,6 +55,9 @@ class Board():
 
             sprite_board += "\n"
         
+        if invert:
+            #fixes the issue of negative y indexing, now coordinate systems should work
+            sprite_board = '\n'.join(sprite_board.splitlines()[::-1])
         print(sprite_board)
     pass
 
