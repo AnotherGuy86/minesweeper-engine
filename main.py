@@ -54,7 +54,7 @@ class Board():
         if self.board_bomb[row_pos,col_pos] == True : self.fail = True
         else:
             self.board_visible[row_pos,col_pos] = True
-
+            #!Swap row-col issue check for flag and other functions
             #Recusive space expansion
             if self.board_value[row_pos,col_pos] == 0:
                 
@@ -71,8 +71,13 @@ class Board():
                     
                     if np.array_equal(board_spaces_new,board_spaces):break
                     else: board_spaces[:]=board_spaces_new
-
+                
+                #Push to the edges to find all numbered values:
+                for i in [0,1]:
+                    for j in [1,-1]:
+                        board_spaces |= np.roll(board_spaces,shift=j,axis=i)
                 self.board_visible |= board_spaces
+
 
     def print(self,make_visible=False,invert=True):
         #print the current case of the board to the terminal
