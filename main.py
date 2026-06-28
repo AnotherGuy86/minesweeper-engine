@@ -1,8 +1,11 @@
 
 import random
+import numpy as np
 
 #This is a simple minesweeper engine
 #It should be able to interact with like a closed box, by 'clicking' the specfic boxes.
+#For each of the previous properties with cells, we need a specific array to hold them
+
 
 class Board():
     def __init__(self,row_count:int,col_count:int,bomb_count:int):
@@ -10,8 +13,13 @@ class Board():
             self.col_count = col_count #this is discrete width  ie the row-length
             self.bomb_count = bomb_count
             self.fail = False
+            
+            #boards
+            self.board_value = np.zeros((row_count,col_count),dtype=int)
+            self.board_flag  = np.zeros((row_count,col_count),dtype=bool)
+            self.board_visible=np.zeros((row_count,col_count),dtype=bool)
+            self.board_bomb  = np.zeros((row_count,col_count),dtype=bool)
 
-            self.board = [[ Cell(i,j) for i in range(col_count)] for j in range(row_count)]
             
             #Now randomly distribute the bombs
             #We need to randomly disribute bombs across a list of spaces
@@ -27,12 +35,12 @@ class Board():
                 row_index = bomb_index//col_count
                 col_index = bomb_index%col_count
 
-                cell = self.board[row_index][col_index] #which row which col
-                cell.bomb = 1
+                self.board_bomb[row_index,col_index] = True
+
                 #Update adj bomb count for cells (this includes self)
                 for i in [-1,0,1]:
                     for j in [-1,0,1]:
-                        try: self.board[row_index+i][col_index+j].value += 1
+                        try: self.board_value[row_index+i,col_index+j] += 1
                         except IndexError: pass
 
 
