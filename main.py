@@ -42,6 +42,8 @@ class Board():
                     for j in [-1,0,1]:
                         try: self.board_value[row_index+i,col_index+j] += 1
                         except IndexError: pass
+            
+            self.board_blanks = (self.board_value == 0)
 
 
     def flag(self,row_pos,col_pos):
@@ -53,6 +55,24 @@ class Board():
         else:
             self.board_visible[row_pos,col_pos] = True
 
+            #Recusive space expansion
+            if self.board_value[row_pos,col_pos] == 0:
+                
+                self.board_blanks = np.astype((self.board_value == 0),bool)
+                board_spaces = np.zeros_like(self.board_value,dtype=bool)
+                board_spaces[row_pos,col_pos] = True
+                board_spaces_new = np.copy(board_spaces)
+
+
+                while True:
+                    for i in [0,1]:
+                        for j in [1,-1]:
+                            board_spaces_new |= (np.roll(board_spaces,shift=j,axis=i) & self.board_blanks)
+                    
+                    if np.array_equal(board_spaces_new,board_spaces):break
+                    else: board_spaces[:]=board_spaces_new
+
+                self.board_visible |= board_spaces
 
     def print(self,make_visible=False,invert=True):
         #print the current case of the board to the terminal
