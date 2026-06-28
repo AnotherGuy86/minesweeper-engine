@@ -46,26 +46,25 @@ class Board():
 
     def flag(self,row_pos,col_pos):
         #uses regular coordinate systems
-        cell= self.board[col_pos][row_pos]
-        cell.flagged = not cell.flagged
+        self.board_flag[row_pos,col_pos] = not self.board_flag[row_pos,col_pos]
     
     def check(self,row_pos,col_pos):
-        cell = self.board[col_pos][row_pos]
-        if cell.bomb : self.fail = True
+        if self.board_bomb[row_pos,col_pos] == True : self.fail = True
         else:
-            cell.visible = 1
+            self.board_visible[row_pos,col_pos] = True
+
 
     def print(self,make_visible=False,invert=True):
         #print the current case of the board to the terminal
         sprite_board = ""
-        for row in self.board:
-            for cell in row:
-                if cell.visible or make_visible:
-                    if cell.bomb: sprite_board += "X"
-                    elif cell.value == 0: sprite_board += " "
-                    else: sprite_board += str(cell.value)
+        for i in range(self.row_count):
+            for j in range(self.col_count):
+                if self.board_visible[i,j] or make_visible:
+                    if self.board_bomb[i,j]: sprite_board += "X"
+                    elif (self.board_value[i,j] == 0): sprite_board += " "
+                    else: sprite_board += str(self.board_value[i,j])
                 else:
-                    if cell.flagged: sprite_board += "F"
+                    if self.board_flag[i,j]: sprite_board += "F"
                     else: sprite_board += "_"
 
             sprite_board += "\n"
