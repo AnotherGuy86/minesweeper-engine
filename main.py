@@ -33,7 +33,8 @@ class Board():
             self.col_count = col_count #this is discrete width  ie the row-length
             self.bomb_count = bomb_count
             self.fail = False
-            
+            self.autoprint = True
+
             #boards
             self.board_value = np.zeros((row_count,col_count),dtype=int)
             self.board_flag  = np.zeros((row_count,col_count),dtype=bool)
@@ -65,10 +66,15 @@ class Board():
             
             self.board_blanks = (self.board_value == 0)
 
+    def toggle_autoprint(self):
+        self.autoprint = not self.autoprint
+        if self.autoprint:print("Autoprint is on")
+        else:             print("Autoprint is off")
 
     def flag(self,row_pos,col_pos):
         #switch inputs as numpy uses [y,x] indexing while we use (x,y) indexing
         self.board_flag[col_pos,row_pos] = not self.board_flag[col_pos,row_pos]
+        if self.autoprint: self.print()
     
     def check(self,row_pos,col_pos):
         if self.board_bomb[col_pos,row_pos] == True : self.fail = True
@@ -97,6 +103,7 @@ class Board():
                     for j in [1,-1]:
                         board_spaces |= np.roll(board_spaces,shift=j,axis=i)
                 self.board_visible |= board_spaces
+        if self.autoprint: self.print()
 
 
     def print(self,make_visible=False,invert=True):
@@ -119,15 +126,5 @@ class Board():
             #fixes the issue of negative y indexing, now coordinate systems should work
             sprite_board = '\n'.join(sprite_board.splitlines()[::-1])
         print(sprite_board)
-    pass
-
-class Cell():
-    def __init__(self,row,col,bomb=0,flagged=0,value = 0,visible=0):
-            self.row = row
-            self.col = col
-            self.bomb = bomb
-            self.flagged = flagged
-            self.value = value #this is inclusive if its a bomb
-            self.visible = visible
     pass
 
