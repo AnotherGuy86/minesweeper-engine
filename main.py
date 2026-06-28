@@ -47,20 +47,20 @@ class Board():
 
 
     def flag(self,row_pos,col_pos):
-        #uses regular coordinate systems
-        self.board_flag[row_pos,col_pos] = not self.board_flag[row_pos,col_pos]
+        #switch inputs as numpy uses [y,x] indexing while we use (x,y) indexing
+        self.board_flag[col_pos,row_pos] = not self.board_flag[col_pos,row_pos]
     
     def check(self,row_pos,col_pos):
-        if self.board_bomb[row_pos,col_pos] == True : self.fail = True
+        if self.board_bomb[col_pos,row_pos] == True : self.fail = True
         else:
-            self.board_visible[row_pos,col_pos] = True
-            #!Swap row-col issue check for flag and other functions
+            self.board_visible[col_pos,row_pos] = True
+            
             #Recusive space expansion
-            if self.board_value[row_pos,col_pos] == 0:
+            if self.board_value[col_pos,row_pos] == 0:
                 
                 self.board_blanks = np.astype((self.board_value == 0),bool)
                 board_spaces = np.zeros_like(self.board_value,dtype=bool)
-                board_spaces[row_pos,col_pos] = True
+                board_spaces[col_pos,row_pos] = True
                 board_spaces_new = np.copy(board_spaces)
 
 
@@ -81,16 +81,25 @@ class Board():
 
     def print(self,make_visible=False,invert=True):
         #print the current case of the board to the terminal
+        square_map = {
+            "_": "＿",
+            " ": "　",  # Special wide-space character
+            "X": "Ｘ",
+            "F": "Ｆ",
+            0: "０", 1: "１", 2: "２", 3: "３", 4: "４",
+            5: "５", 6: "６", 7: "７", 8: "８", 9: "９"
+        }
+
         sprite_board = ""
         for i in range(self.row_count):
             for j in range(self.col_count):
                 if self.board_visible[i,j] or make_visible:
-                    if self.board_bomb[i,j]: sprite_board += "X"
-                    elif (self.board_value[i,j] == 0): sprite_board += " "
-                    else: sprite_board += str(self.board_value[i,j])
+                    if self.board_bomb[i,j]: sprite_board += square_map["X"]
+                    elif (self.board_value[i,j] == 0): sprite_board += square_map[" "]
+                    else: sprite_board += square_map[(self.board_value[i,j])]
                 else:
-                    if self.board_flag[i,j]: sprite_board += "F"
-                    else: sprite_board += "_"
+                    if self.board_flag[i,j]: sprite_board += square_map['F']
+                    else: sprite_board += square_map["_"]
 
             sprite_board += "\n"
         
