@@ -6,6 +6,26 @@ import numpy as np
 #It should be able to interact with like a closed box, by 'clicking' the specfic boxes.
 #For each of the previous properties with cells, we need a specific array to hold them
 
+# Text Colors
+C_GRAY    = "\033[90m"
+C_RED     = "\033[91m"
+C_GREEN   = "\033[92m"
+C_YELLOW  = "\033[93m"
+C_BLUE    = "\033[94m"
+C_MAGENTA = "\033[95m"
+C_CYAN    = "\033[96m"
+C_WHITE   = "\033[97m"
+RESET = "\033[0m"
+
+square_map = {
+    "_": f"{C_GRAY}＿{RESET}",
+    " ": "　",  # Special wide-space character
+    "X": f"{C_RED}Ｘ{RESET}",
+    "F": f"{C_RED}Ｆ{RESET}",
+    0: f"０", 1: f"{C_BLUE}１{RESET}", 2: f"{C_GREEN}２{RESET}", 3: f"{C_YELLOW}３{RESET}", 4: f"{C_MAGENTA}４{RESET}",
+    5: f"{C_GRAY}５{RESET}", 6: f"{C_WHITE}６{RESET}", 7: f"{C_CYAN}７{RESET}", 8: f"{C_RED}８{RESET}", 9: f"９"
+}
+
 
 class Board():
     def __init__(self,row_count:int,col_count:int,bomb_count:int):
@@ -81,14 +101,6 @@ class Board():
 
     def print(self,make_visible=False,invert=True):
         #print the current case of the board to the terminal
-        square_map = {
-            "_": "＿",
-            " ": "　",  # Special wide-space character
-            "X": "Ｘ",
-            "F": "Ｆ",
-            0: "０", 1: "１", 2: "２", 3: "３", 4: "４",
-            5: "５", 6: "６", 7: "７", 8: "８", 9: "９"
-        }
 
         sprite_board = ""
         for i in range(self.row_count):
